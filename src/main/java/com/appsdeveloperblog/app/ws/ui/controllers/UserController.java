@@ -57,7 +57,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping(
+	@PostMapping( //delete API
 			consumes =  { 
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE
