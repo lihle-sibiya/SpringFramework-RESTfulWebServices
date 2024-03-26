@@ -19,7 +19,7 @@ import com.appsdeveloperblog.app.ws.userservice.UserService;
 @Service
 public class UserServiceImpl implements UserService{
 
-	Map<String, UserRest> users;
+	Map<String, UserRest> users; //stores data: key=user ID; value = UserRest object: has user details
 	Utils utils;
 	
 	public UserServiceImpl() {}
