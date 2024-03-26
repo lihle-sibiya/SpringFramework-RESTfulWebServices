@@ -1,5 +1,7 @@
 package com.appsdeveloperblog.app.ws.ui.controllers;
 
+import java.util.List;
+
 import java.util.Map;
 
 
@@ -34,13 +36,28 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping
-	public String getUsers(@RequestParam(value="page", defaultValue="1") int page, 
+	@GetMapping 
+//	//Shows no user data
+//	public String getUsers(@RequestParam(value="page", defaultValue="1") int page, 
+//			@RequestParam(value="limit", defaultValue="50") int limit,
+//			@RequestParam(value="sort", defaultValue = "desc", required = false) String sort)
+//	{
+//		return "get users was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
+//	}
+//	
+	public ResponseEntity<List<UserRest>> getUsers(@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="limit", defaultValue="50") int limit,
 			@RequestParam(value="sort", defaultValue = "desc", required = false) String sort)
 	{
-		return "get users was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
-	}
+		List<UserRest> allUsers = userService.getAllUsers();
+		if (allUsers.isEmpty()) {
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);	
+		}
+		else {
+			return new ResponseEntity<>(allUsers, HttpStatus.OK);
+		}
+		}
+		
 	
 	@GetMapping(path="/{userId}", //show user ID
 			produces =  { 
@@ -48,12 +65,12 @@ public class UserController {
 					MediaType.APPLICATION_JSON_VALUE
 					} )
 	public ResponseEntity<UserRest> getUser(@PathVariable String userId)
-	{
-		if(users.containsKey(userId))
+	{ UserRest user = userService.getUserById(userId);
+		if(user != null)
 		{
-			return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
+			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -84,12 +101,18 @@ public class UserController {
 	public UserRest updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailsRequestModel userDetails)
 	{
 		 UserRest storedUserDetails = users.get(userId);
+		 
+		 if (storedUserDetails != null) {
+		 storedUserDetails.setEmail(userDetails.getEmail());
 		 storedUserDetails.setFirstName(userDetails.getFirstName());
 		 storedUserDetails.setLastName(userDetails.getLastName());
 		 
 		 users.put(userId, storedUserDetails);
 		 
 		 return storedUserDetails;
+	} else {
+		return null;
+	}
 	}
 	
 	@DeleteMapping(path="/{id}")
