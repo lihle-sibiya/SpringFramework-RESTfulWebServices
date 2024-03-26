@@ -42,7 +42,7 @@ public class UserController {
 		return "get users was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
 	}
 	
-	@GetMapping(path="/{userId}", 
+	@GetMapping(path="/{userId}", //show user ID
 			produces =  { 
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
@@ -73,7 +73,7 @@ public class UserController {
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
 	}
 	
-	@PutMapping(path="/{userId}", consumes =  { 
+	@PutMapping(path="/{userId}", consumes =  { //update user
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE
 			}, 
