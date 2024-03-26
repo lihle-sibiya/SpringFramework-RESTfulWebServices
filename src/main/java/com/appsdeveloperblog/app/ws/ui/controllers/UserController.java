@@ -27,16 +27,16 @@ import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 import com.appsdeveloperblog.app.ws.userservice.UserService;
 
 
-@RestController
-@RequestMapping("/users")  // http://localhost:8080/users
+@RestController //this is a Controller class: handles HTTP request generates responses
+@RequestMapping("/users")  // http://localhost:8080/users : base URL for all end points
 public class UserController {
 
 	Map<String, UserRest> users;
 	
-	@Autowired
-	UserService userService;
+	@Autowired //injecting the UserService into the Controller
+	UserService userService; //dependent on a service called UserService which handles logic
 	
-	@GetMapping 
+	@GetMapping //Retrieves a list of users: uses pagination(page limit, sort)
 	public ResponseEntity<List<UserRest>> getUsers(@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="limit", defaultValue="50") int limit,
 			@RequestParam(value="sort", defaultValue = "desc", required = false) String sort)
