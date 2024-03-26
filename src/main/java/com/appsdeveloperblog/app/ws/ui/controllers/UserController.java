@@ -37,14 +37,6 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping 
-//	//Shows no user data
-//	public String getUsers(@RequestParam(value="page", defaultValue="1") int page, 
-//			@RequestParam(value="limit", defaultValue="50") int limit,
-//			@RequestParam(value="sort", defaultValue = "desc", required = false) String sort)
-//	{
-//		return "get users was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
-//	}
-//	
 	public ResponseEntity<List<UserRest>> getUsers(@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="limit", defaultValue="50") int limit,
 			@RequestParam(value="sort", defaultValue = "desc", required = false) String sort)
@@ -74,7 +66,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping( //delete API
+	@PostMapping( //create API
 			consumes =  { 
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE
@@ -90,6 +82,7 @@ public class UserController {
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
 	}
 	
+	
 	@PutMapping(path="/{userId}", consumes =  { //update user
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE
@@ -98,27 +91,22 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 					}  )
-	public UserRest updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailsRequestModel userDetails)
+	public ResponseEntity<UserRest> updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailsRequestModel userDetails)
 	{
-		 UserRest storedUserDetails = users.get(userId);
+		 UserRest updatedUser = userService.updateUser(userId, userDetails);
 		 
-		 if (storedUserDetails != null) {
-		 storedUserDetails.setEmail(userDetails.getEmail());
-		 storedUserDetails.setFirstName(userDetails.getFirstName());
-		 storedUserDetails.setLastName(userDetails.getLastName());
-		 
-		 users.put(userId, storedUserDetails);
-		 
-		 return storedUserDetails;
-	} else {
-		return null;
+		 if (updatedUser  != null) {
+			 return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+		    } else {
+		        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		    }
 	}
-	}
+	
 	
 	@DeleteMapping(path="/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable String id)
 	{
-		users.remove(id);
+		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
 	}
