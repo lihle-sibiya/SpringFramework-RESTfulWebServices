@@ -2,6 +2,7 @@ package com.appsdeveloperblog.app.ws.userservice;
 
 import java.util.List;
 
+
 import com.appsdeveloperblog.app.ws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.request.UserDetailsRequestModel;
 
